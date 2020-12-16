@@ -7,7 +7,7 @@ const handler = async (req, res) => {
     await runMiddleware(req, res, passport.authenticate('local', {session: false}))
 
     res.json({
-        token: req.user.generateAuthToken()
+        user: {...req.user.toJSON(), token: req.user.generateAuthToken()}
     })
 }
 

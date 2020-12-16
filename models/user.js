@@ -6,6 +6,12 @@ import validator from 'validator'
 const Schema = mongoose.Schema
 
 const userSchema = new Schema({
+    name: {
+        type: String,
+        required: true,
+        trim: true
+    },
+
     email: { 
         type: String,
         unique: true,
@@ -19,14 +25,24 @@ const userSchema = new Schema({
         }
         
     },
+
     password: {
         type: String,
-        requried: true,
         trim: true,
         minlength: 3,
         validate(value) {
             if (value.toLowerCase().includes('password')) {
                 throw new Error('Password cannot contain password')
+            }
+        }
+    },
+
+    membership: {
+        type: String,
+        default: 'basic',
+        validate (value) {
+            if (!['basic', 'preferred', 'admin'].includes(value)) {
+            throw new Error('Membership value is invalid')
             }
         }
     }
@@ -65,9 +81,11 @@ userSchema.methods.toJSON = function () {
     const user = this
     const userObject = user.toObject()
 
+    delete userObject._id
+    delete userObject.__v
+    delete userObject.email
     delete userObject.password
-    // delete userObject.tokens
-
+    
     return userObject
 }
 
