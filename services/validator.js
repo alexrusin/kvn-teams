@@ -1,11 +1,53 @@
-const errors = []
+import validator from 'validator'
 
-const validator = (fields) => {
-    const validateFields = (req, res, next) => {
-        if (!req.body.name) {
+let errors = []
+
+const validations = {
+    required(field, value) {
+        if (!value) {
             errors.push({
-                field: 'name', 
-                message: 'required'
+                field, 
+                message: `${field} is required`
+            })
+        }
+    },
+    
+    minlength(field, value, minlength) {
+        if (!value) {
+            return
+        }
+        if (value.length < parseInt(minlength)) {
+            errors.push({
+                field, 
+                message: `${field} should be at least ${minlength} characters`
+            })
+        }
+    },
+
+    email(field, value) {
+        if (!value) {
+            return
+        }
+
+        if (!validator.isEmail(value)) {
+            errors.push({
+                field, 
+                message: `${field} should be a valid email`
+            })
+        }
+    }
+}
+
+export default (fields) => {
+    errors = []
+    const validateFields = (req, res, next) => {
+        
+        for (const property in fields) {
+            const validationRules = fields[property].split('|')
+            validationRules.forEach((rule) => {
+                let [validationRule, argument] = rule.split(':')
+                    validations[validationRule](property, req.body[property], argument)
+                
             })
         }
 
@@ -20,5 +62,3 @@ const validator = (fields) => {
     }
     return validateFields
 }
-
-export default validator
