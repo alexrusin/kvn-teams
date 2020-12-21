@@ -1,13 +1,28 @@
 import { useState } from "react"
+import axios from "axios"
 
 export default function Signin() {
 
     const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+	const [password, setPassword] = useState('')
+	const [error, setError] = useState('')
 
     const submitForm  = (e) => {
         e.preventDefault()
-        console.log(email, password)
+		axios.post('/api/auth/signin', {
+			email,
+			password
+		})
+		.then(() => {
+			console.log('redirecting to dashboard')
+		})
+		.catch((err) => {
+			if (err.response) {
+				setError('Invalid email or password')
+			} else {
+				setError('There was an error processing your request')
+			}
+		})
     }
 
     return (
@@ -22,6 +37,7 @@ export default function Signin() {
 					<div className="w-full lg:w-1/2 bg-white p-5 rounded-lg lg:rounded-l-none">
 						<h3 className="pt-4 text-2xl text-center">Welcome Back!</h3>
 						<form
+							onKeyDown={() => setError('')}
                             onSubmit={submitForm} 
                             className="px-8 pt-6 pb-8 mb-4 bg-white rounded"
                         >
@@ -45,18 +61,14 @@ export default function Signin() {
 								<input
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-									className="w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border border-red-500 rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+									className={`w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline`}
 									id="password"
 									type="password"
-									placeholder="******************"
+									placeholder="***********"
 								/>
-								<p className="text-xs italic text-red-500">Please choose a password.</p>
-							</div>
-							<div className="mb-4">
-								<input className="mr-2 leading-tight" type="checkbox" id="checkbox_id" />
-								<label className="text-sm" htmlFor="checkbox_id">
-									Remember Me
-								</label>
+								{error &&
+									<p className="text-xs italic text-red-500">{error}</p>
+								}
 							</div>
 							<div className="mb-6 text-center">
 								<button
