@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 import axios from "axios"
 import { useDispatch } from "react-redux"
 import { signIn, signOut } from "actions"
@@ -88,12 +89,14 @@ export default function Signin() {
 							</div>
 							<hr className="mb-6 border-t" />
 							<div className="text-center">
-								<a
-									className="inline-block text-sm text-blue-500 align-baseline hover:text-blue-800"
-									href="./register.html"
-								>
-									Create an Account!
-								</a>
+								<Link href="/register">
+									<a
+										className="inline-block text-sm text-blue-500 align-baseline hover:text-blue-800"
+									>
+										Create an Account!
+									</a>
+								</Link>
+								
 							</div>
 							<div className="text-center">
 								<a
