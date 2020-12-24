@@ -1,22 +1,29 @@
 import { useState } from "react"
+import { useRouter } from 'next/router'
 import axios from "axios"
+import { useDispatch } from "react-redux"
+import { signIn, signOut } from "actions"
 
 export default function Signin() {
 
     const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 	const [error, setError] = useState('')
-
+	const router = useRouter()
+	const dispatch = useDispatch()
+	
     const submitForm  = (e) => {
         e.preventDefault()
 		axios.post('/api/auth/signin', {
 			email,
 			password
 		})
-		.then(() => {
-			console.log('redirecting to dashboard')
+		.then(({data}) => {
+			dispatch(signIn(data.user))
+			router.push('/dashboard')
 		})
 		.catch((err) => {
+			dispatch(signOut())
 			if (err.response) {
 				setError('Invalid email or password')
 			} else {
