@@ -1,12 +1,14 @@
-import Link from "next/link";
-import { useState } from "react";
+import Link from 'next/link'
+import { useState } from 'react'
+import axios from 'axios'
 
 export default function Register() {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
-    const [confirmPasswordError, setConfirmPasswordError] = useState('')
+	const [confirmPasswordError, setConfirmPasswordError] = useState('')
+	const [errors, setErrors] = useState({})
 
     const checkConfirmPassword = (value, compareTo, confirmPasswordField) => {
         setConfirmPasswordError(value !== compareTo ? 'Passwords don\'t match' : '')
@@ -15,8 +17,55 @@ export default function Register() {
         } else {
             setPassword(value)
         }
-        
-    }
+	}
+
+	const getErrorMessage = (field) => {
+		if (!field) {
+			return errors.message
+		}
+		if (!errors.errors) {
+			return
+		}
+
+		const error = errors.errors.find(err => err.field === field)
+		if (error) {
+			return error.message
+		}
+	}
+
+	const clearError = (field) => {
+		
+		if (!field) {
+			return setErrors({...errors, message: ''})
+		}
+
+
+		if (!errors.errors) {
+			return
+		}
+
+		const filteredErrors = errors.errors.filter((err) => err.field !== field)
+		errors.errors = filteredErrors
+		setErrors(errors)
+	}
+	
+	const submitForm = (e) => {
+		e.preventDefault()
+
+		axios.post('/api/auth/signup', {
+			name,
+			email,
+			password
+		})
+		.then(({data}) => console.log(data.user))
+		.catch(error => {
+			if (error.response) {
+				setErrors(error.response.data)
+			}
+		})
+
+		
+	}
 
     return (
 		<div className="container mx-auto">
@@ -28,7 +77,7 @@ export default function Register() {
 					></div>
 					<div className="w-full lg:w-1/2 bg-white p-5 rounded-lg lg:rounded-l-none">
 						<h3 className="pt-4 text-2xl text-center">Create an Account!</h3>
-						<form className="px-8 pt-6 pb-8 mb-4 bg-white rounded">	
+						<form className="px-8 pt-6 pb-8 mb-4 bg-white rounded" onSubmit={(e) => submitForm(e)} onKeyDown={(e) => clearError(e.target.id)}>	
                             <div className="mb-4">
                                 <label className="block mb-2 text-sm font-bold text-gray-700" htmlFor="firstName">
                                     Name
@@ -37,10 +86,11 @@ export default function Register() {
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
                                     className="w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                                    id="firstName"
+                                    id="name"
                                     type="text"
                                     placeholder="First Name"
                                 />
+								{getErrorMessage('name') && <p className="text-xs italic text-red-500">{getErrorMessage('name')}</p>}
                             </div>
 							<div className="mb-4">
 								<label className="block mb-2 text-sm font-bold text-gray-700" htmlFor="email">
@@ -54,6 +104,7 @@ export default function Register() {
 									type="email"
 									placeholder="Email"
 								/>
+								{getErrorMessage('email') && <p className="text-xs italic text-red-500">{getErrorMessage('email')}</p>}
 							</div>
 							<div className="mb-4 md:flex md:justify-between">
 								<div className="mb-4 md:mr-2 md:mb-0">
@@ -68,6 +119,7 @@ export default function Register() {
 										type="password"
 										placeholder="******************"
 									/>
+									{getErrorMessage('password') && <p className="text-xs italic text-red-500">{getErrorMessage('password')}</p>}
 								</div>
 								<div className="md:ml-2">
 									<label className="block mb-2 text-sm font-bold text-gray-700" htmlFor="c_password">
@@ -86,8 +138,9 @@ export default function Register() {
 							</div>
 							<div className="mb-6 text-center">
 								<button
+									disabled={!name || !email || !password || !confirmPassword}
 									className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline"
-									type="button"
+									type="submit"
 								>
 									Register Account
 								</button>
