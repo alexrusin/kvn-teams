@@ -1,6 +1,7 @@
+import requireAuth from "components/requireAuth"
 import { useSelector } from "react-redux"
 
-export default function Dashboard() {
+const  Dashboard = () => {
     const user = useSelector(({auth}) => auth)
     return (
         <div className="py-20">
@@ -10,3 +11,5 @@ export default function Dashboard() {
         </div>
     )
 }
+
+export default requireAuth(Dashboard)

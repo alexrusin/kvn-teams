@@ -1,6 +1,9 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import axios from 'axios'
+import { useRouter } from 'next/router'
+import { signIn } from 'actions'
+import { useDispatch } from 'react-redux'
 
 export default function Register() {
     const [name, setName] = useState('')
@@ -9,6 +12,8 @@ export default function Register() {
     const [confirmPassword, setConfirmPassword] = useState('')
 	const [confirmPasswordError, setConfirmPasswordError] = useState('')
 	const [errors, setErrors] = useState({})
+	const dispatch = useDispatch()
+	const router = useRouter()
 
     const checkConfirmPassword = (value, compareTo, confirmPasswordField) => {
         setConfirmPasswordError(value !== compareTo ? 'Passwords don\'t match' : '')
@@ -57,7 +62,10 @@ export default function Register() {
 			email,
 			password
 		})
-		.then(({data}) => console.log(data.user))
+		.then(({data}) => {
+			dispatch(signIn(data.user))
+			router.push('/dashboard')
+		})
 		.catch(error => {
 			if (error.response) {
 				setErrors(error.response.data)
@@ -88,7 +96,7 @@ export default function Register() {
                                     className="w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
                                     id="name"
                                     type="text"
-                                    placeholder="First Name"
+                                    placeholder="Name"
                                 />
 								{getErrorMessage('name') && <p className="text-xs italic text-red-500">{getErrorMessage('name')}</p>}
                             </div>
