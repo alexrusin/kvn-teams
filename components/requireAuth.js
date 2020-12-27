@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { useSelector } from 'react-redux'
+import PageLoading from 'components/PageLoading'
 
 const requireAuth = (ChildComponent) => {
     const ComposedComponent = (props) => {
@@ -14,7 +15,10 @@ const requireAuth = (ChildComponent) => {
         }, [membership, router])
 
         return (
+            membership ?
             <ChildComponent {...props} />
+            :
+            <PageLoading />
         )
     }
 

@@ -1,5 +1,5 @@
 import { getAuthUser, signOut } from 'actions'
-import Navigation from 'components/Navigation'
+import NavBar from 'components/NavBar'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import wrapper from 'store'
@@ -19,7 +19,7 @@ function MyApp({ Component, pageProps }) {
   }, [])
   return (
     <>
-      <Navigation />
+      <NavBar />
       <Component {...pageProps} />
     </>
   )
