@@ -83,7 +83,6 @@ userSchema.methods.toJSON = function () {
 
     delete userObject._id
     delete userObject.__v
-    delete userObject.email
     delete userObject.password
     
     return userObject
