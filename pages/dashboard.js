@@ -5,8 +5,7 @@ import { useSelector } from "react-redux"
 const  Dashboard = () => {
     const user = useSelector(({auth}) => auth)
     return (
-        <div className="flex justify-center">
-             <div className="container py-8">
+             <div className="container py-8 mx-auto my-auto px-2">
                 <h1 className="text-2xl text-center text-gray-700 dark:text-gray-100 pb-2">
                 Welcome to Dashboard {user.membership === 'guest' ? 'Guest' : user.name}!
                 </h1>
@@ -20,7 +19,7 @@ const  Dashboard = () => {
                                 <th
                                     className="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                                     Membership</th>
-                                <th className="px-6 py-3 border-b border-gray-200 bg-gray-50"></th>
+                                <th className="py-3 border-b border-gray-200 bg-gray-50"></th>
                             </tr>
                         </thead>
 
@@ -35,10 +34,6 @@ const  Dashboard = () => {
                                                 height={50}
                                                 alt={user.name}
                                                 />
-
-                                            {/* <img className="h-10 w-10 rounded-full"
-                                                src="https://www.speakingtigerbooks.com/wp-content/uploads/2018/07/no-avatar.jpg"
-                                                alt={user.name} /> */}
                                         </div>
 
                                         <div className="ml-4">
@@ -55,7 +50,7 @@ const  Dashboard = () => {
                                 </td>
 
                                 <td
-                                    className="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
+                                    className="py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
                                     <span className="text-indigo-600 hover:text-indigo-900 cursor-pointer">Edit</span>
                                 </td>
                             </tr>
@@ -63,7 +58,6 @@ const  Dashboard = () => {
                     </table>
                 </div>
             </div>
-        </div>
     )
 }
 

@@ -41,30 +41,36 @@ export default function NavBar () {
           className="inline-flex p-3 ml-auto text-white rounded outline-none hover:bg-gray-900 lg:hidden hover:text-white nav-toggler"
           data-target="#navigation"
         >
-          <i className="material-icons">menu</i>
+          <svg className="w-8 h-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
         </button>
         <div
           className={`${menuOpen ? '' : 'hidden'} w-full top-navbar lg:inline-flex lg:flex-grow lg:w-auto`}
           id="navigation"
         >
           <div className="flex flex-col items-start w-full lg:inline-flex lg:flex-row lg:ml-auto lg:w-auto lg:items-center lg:h-auto">
-          <Link href="/">
-            <a
-              className="items-center justify-center w-full px-3 py-2 text-gray-400 rounded lg:inline-flex lg:w-auto hover:bg-gray-900 hover:text-white"
-            >
-              <span>Home</span>
-            </a>
-          </Link>
           {
               (membership && membership !== 'guest') &&
               <Link href="/dashboard">
                 <a
-                className="items-center justify-center w-full px-3 py-2 text-gray-400 rounded lg:inline-flex lg:w-auto hover:bg-gray-900 hover:text-white"
+                className={`items-center justify-center w-full px-3 py-2 rounded lg:inline-flex lg:w-auto hover:bg-gray-900 hover:text-white ${router.pathname === '/dashboard' ? 'text-white' : 'text-gray-400'}`}
                 >
-                    <span>Dashboard</span>
+                    <span>Панель управления</span>
                 </a>
               </Link>
           }
+
+          {
+              (membership && membership === 'admin') &&
+              <Link href="/admin/create-team">
+                <a
+                className={`items-center justify-center w-full px-3 py-2 rounded lg:inline-flex lg:w-auto hover:bg-gray-900 hover:text-white ${router.pathname === '/admin/create-team' ? 'text-white' : 'text-gray-400'}`}
+                >
+                    <span>Создать команду</span>
+                </a>
+              </Link>
+          } 
           
           {
           membership === 'guest'
@@ -72,13 +78,13 @@ export default function NavBar () {
             <a
               className="items-center justify-center w-full px-3 py-2 text-gray-400 rounded lg:inline-flex lg:w-auto hover:bg-gray-900 hover:text-white"
             >
-              <span>Login</span>
+              <span>Вход</span>
             </a>
           </Link>
             : <a
             onClick={(e) => handleLogout(e)}
             className="cursor-pointer items-center justify-center w-full px-3 py-2 text-gray-400 rounded lg:inline-flex lg:w-auto hover:bg-gray-900 hover:text-white">
-            Log out
+            Выход
           </a>
           }
           </div>

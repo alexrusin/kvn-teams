@@ -45,7 +45,18 @@ const userSchema = new Schema({
             throw new Error('Membership value is invalid')
             }
         }
-    }
+    },
+    
+    forgot_password_tokens: [
+        {
+            token: {
+                type: String,
+                required: true
+            }
+        }
+    ]
+}, {
+    timestamps: true
 })
 
 userSchema.statics.findByCredentials = async (email, password) => {
