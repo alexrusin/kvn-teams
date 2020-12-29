@@ -9,7 +9,7 @@ const requireAdmin = (ChildComponent) => {
         const membership = useSelector(({auth}) => auth.membership)
 
         useEffect(() => {
-            if(membership !== 'admin') {
+            if(membership && membership !== 'admin') {
                 router.push('/')
             }
         }, [membership, router])
