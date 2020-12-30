@@ -4,25 +4,24 @@ import { useSelector } from 'react-redux'
 import PageLoading from 'components/PageLoading'
 
 const requireAdmin = (ChildComponent) => {
-    const ComposedComponent = (props) => {
-        const router = useRouter()
-        const membership = useSelector(({auth}) => auth.membership)
+  const ComposedComponent = (props) => {
+    const router = useRouter()
+    const membership = useSelector(({ auth }) => auth.membership)
 
-        useEffect(() => {
-            if(membership && membership !== 'admin') {
-                router.push('/')
-            }
-        }, [membership, router])
+    useEffect(() => {
+      if (membership && membership !== 'admin') {
+        router.push('/')
+      }
+    }, [membership, router])
 
-        return (
-            membership ?
-            <ChildComponent {...props} />
-            :
-            <PageLoading />
-        )
-    }
+    return (
+      membership
+        ? <ChildComponent {...props} />
+        : <PageLoading />
+    )
+  }
 
-    return ComposedComponent
+  return ComposedComponent
 }
 
 export default requireAdmin
