@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'
 import { signOut } from 'actions'
 
 export default function NavBar () {
-  const membership = useSelector(({auth}) => auth.membership)
+  const membership = useSelector(({ auth }) => auth.membership)
   const dispatch = useDispatch()
   const router = useRouter()
 
@@ -80,8 +80,8 @@ export default function NavBar () {
                     <span>Создать команду</span>
                 </a>
               </Link>
-          } 
-          
+          }
+
           {
           membership === 'guest'
             ? <Link href="/signin">

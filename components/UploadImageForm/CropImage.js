@@ -15,7 +15,7 @@ export default function CropImage ({
           <ReactCrop
             src={image}
             crop={crop}
-            onChange={(newCrop) => setCrop(newCrop)}
+            onChange={(newCrop, percentCrop) => setCrop(percentCrop)}
           />
         </div>
         <div className="flex justify-end">

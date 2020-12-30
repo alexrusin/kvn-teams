@@ -1,3 +1,4 @@
+import useApiClient from 'components/useApiClient'
 import requireAdmin from 'components/requireAdmin'
 import UploadImageForm from 'components/UploadImageForm'
 import { useState } from 'react'
@@ -9,11 +10,25 @@ const CreateTeam = () => {
   const [description, setDescription] = useState('')
   const [imageName, setImageName] = useState('')
   const [image, setImage] = useState()
+  const [imageSrc, setImageSrc] = useState()
   const initialCrop = { unit: '%', width: 100, aspect: 16 / 9, x: 0, y: 0 }
   const [crop, setCrop] = useState(initialCrop)
+  const axios = useApiClient()
+
   const submitForm = (e) => {
     e.preventDefault()
-    console.log(name, city, description, imageName)
+    axios.post('/api/teams', {
+      name,
+      city,
+      description,
+      imageName,
+      image,
+      crop
+    })
+      .then(({ data }) => {
+        setImageSrc(data)
+      })
+      .catch(error => console.log(error.response.data))
   }
 
   return (
@@ -70,6 +85,8 @@ const CreateTeam = () => {
                     />
                   </div>
                 </div>
+                <div>Team image</div>
+                <img src={imageSrc} />
 
                 <div>
                   <label
