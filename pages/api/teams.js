@@ -1,10 +1,17 @@
 import 'services/passport'
+import 'database/connection'
 import passport from 'passport'
 import runMiddleware from 'utils/runMiddleware'
 import getCroppedImage from 'utils/getCroppedImage'
+import validator from 'services/validator'
 
 export default async function (req, res) {
   await runMiddleware(req, res, passport.authenticate('jwt', { session: false }))
+  await runMiddleware(req, res, validator({
+    name: 'required|minlength:3',
+    city: 'required|minlength:3',
+    image: 'required'
+  }))
   const { method } = req
   let croppedImage
   switch (method) {

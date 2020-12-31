@@ -1,6 +1,7 @@
 import useApiClient from 'components/useApiClient'
 import requireAdmin from 'components/requireAdmin'
 import UploadImageForm from 'components/UploadImageForm'
+import { getError, clearError } from 'utils/validationErrors'
 import { useState } from 'react'
 import 'react-image-crop/dist/ReactCrop.css'
 
@@ -13,10 +14,12 @@ const CreateTeam = () => {
   const [imageSrc, setImageSrc] = useState()
   const initialCrop = { unit: '%', width: 100, aspect: 16 / 9, x: 0, y: 0 }
   const [crop, setCrop] = useState(initialCrop)
+  const [errors, setErrors] = useState({})
   const axios = useApiClient()
 
   const submitForm = (e) => {
     e.preventDefault()
+    clearError('image', errors, setErrors)
     axios.post('/api/teams', {
       name,
       city,
@@ -28,7 +31,12 @@ const CreateTeam = () => {
       .then(({ data }) => {
         setImageSrc(data)
       })
-      .catch(error => console.log(error.response.data))
+      .catch((error) => {
+        if (error.response && error.response.status === 422) {
+          return setErrors(error.response.data)
+        }
+        console.log(error)
+      })
   }
 
   return (
@@ -45,7 +53,10 @@ const CreateTeam = () => {
           </div>
         </div>
         <div className="mt-5 md:mt-0 md:col-span-2">
-          <form onSubmit={submitForm}>
+          <form
+          onSubmit={submitForm}
+          onKeyDown={(e) => clearError(e.target.id, errors, setErrors)}
+          >
             <div className="shadow sm:rounded-md sm:overflow-hidden">
               <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
                 <div className="grid grid-cols-6 gap-6">
@@ -65,6 +76,11 @@ const CreateTeam = () => {
                       autoComplete="off"
                       className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                     />
+                    {getError('name', errors) && (
+                    <p className="text-xs italic text-red-500">
+                      {getError('name', errors)}
+                    </p>
+                    )}
                   </div>
 
                   <div className="col-span-6 sm:col-span-3">
@@ -83,6 +99,11 @@ const CreateTeam = () => {
                       autoComplete="off"
                       className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                     />
+                    {getError('city', errors) && (
+                    <p className="text-xs italic text-red-500">
+                      {getError('city', errors)}
+                    </p>
+                    )}
                   </div>
                 </div>
                 <div>Team image</div>
@@ -118,6 +139,11 @@ const CreateTeam = () => {
                   setImageName={setImageName}
                   initialCrop={initialCrop}
                 />
+                {getError('image', errors) && (
+                    <p className="text-xs italic text-red-500">
+                      {getError('image', errors)}
+                    </p>
+                )}
               </div>
               <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
                 <button type="submit" className="btn-primary">

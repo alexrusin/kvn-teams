@@ -5,8 +5,7 @@ import { useDispatch } from 'react-redux'
 import wrapper from 'store'
 import 'styles/index.css'
 
-
-function MyApp({ Component, pageProps }) {
+function MyApp ({ Component, pageProps }) {
   const dispatch = useDispatch()
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -15,7 +14,6 @@ function MyApp({ Component, pageProps }) {
     } else {
       dispatch(signOut())
     }
-    
   }, [])
   return (
     <>

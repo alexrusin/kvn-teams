@@ -34,14 +34,14 @@ export default function UploadImage ({ setImage, setImageName }) {
           </svg>
           <div className="flex text-sm text-gray-600">
             <label
-              htmlFor="file-upload"
+              htmlFor="image"
               className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
             >
               <span>Загрузить фото</span>
               <input
                 onChange={(e) => processFile(e.target.files)}
-                id="file-upload"
-                name="file-upload"
+                id="image"
+                name="image"
                 type="file"
                 accept="image/*"
                 className="sr-only"
