@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@tailwindcss/forms": "^0.2.1",
+    "aws-sdk": "^2.820.0",
     "axios": "^0.21.0",
     "bcrypt": "^5.0.0",
     "canvas": "^2.6.1",
