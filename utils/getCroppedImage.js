@@ -27,16 +27,5 @@ export default function getCroppedImage (imageSrc, crop, fileName) {
     crop.height
   )
 
-  return new Promise((resolve, reject) => {
-    canvas.toDataURL('image/jpeg', (err, jpeg) => {
-      if (err) {
-        reject(new Error('There was an error processing image'))
-      }
-      resolve(jpeg)
-    })
-    // canvas.toBlob(blob => {
-    //   blob.name = fileName
-    //   resolve(blob)
-    // }, 'image/jpeg', 1)
-  })
+  return canvas.toBuffer('image/jpeg', { quality: 0.8 })
 }
