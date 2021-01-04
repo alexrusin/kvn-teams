@@ -4,8 +4,9 @@ import passport from 'passport'
 import runMiddleware from 'utils/runMiddleware'
 import getCroppedImage from 'utils/getCroppedImage'
 import validator from 'services/validator'
-import uploadFile from 'services/uploadFile'
+import { uploadFile, getUrl } from 'services/s3'
 import stringRandom from 'utils/stringRandom'
+import Team from 'models/team'
 
 export default async function (req, res) {
   await runMiddleware(req, res, passport.authenticate('jwt', { session: false }))
@@ -18,9 +19,35 @@ export default async function (req, res) {
   let croppedImage
   switch (method) {
     case 'POST':
+      const name = req.body.name
+      const city = req.body.city.replace('г.', '')
+      const existingTeam = await Team.findOne({ name })
+      if (existingTeam) {
+        return res.status(422).json({
+          errors: [
+            {
+              field: 'name',
+              message: 'Такая команда уже существует'
+            }
+          ],
+          message: 'В ваших данных обнаружена ошибка'
+        })
+      }
       croppedImage = getCroppedImage(req.body.image, req.body.crop, req.body.imageName)
-      const uploadData = await uploadFile(croppedImage, `teams/${stringRandom(20)}.jpg`)
-      res.send('https://ikdb-dev.s3-us-west-2.amazonaws.com/teams/ZnaGYXtnaOzb2Gqbcbwv.jpg')
+      const path = `teams/${stringRandom(20)}.jpg`
+      await uploadFile(croppedImage, path)
+
+      const team = new Team({
+        name,
+        city,
+        images: [{
+          url: path
+        }]
+      })
+
+      await team.save()
+
+      res.send({team})
       break
     default:
       res.status(404).json({ message: `Method ${method} not found` })

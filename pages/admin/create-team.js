@@ -11,7 +11,6 @@ const CreateTeam = () => {
   const [description, setDescription] = useState('')
   const [imageName, setImageName] = useState('')
   const [image, setImage] = useState()
-  const [imageSrc, setImageSrc] = useState()
   const initialCrop = { unit: '%', width: 100, aspect: 16 / 9, x: 0, y: 0 }
   const [crop, setCrop] = useState(initialCrop)
   const [errors, setErrors] = useState({})
@@ -29,7 +28,7 @@ const CreateTeam = () => {
       crop
     })
       .then(({ data }) => {
-        setImageSrc(data)
+        console.log(data)
       })
       .catch((error) => {
         if (error.response && error.response.status === 422) {
@@ -106,9 +105,6 @@ const CreateTeam = () => {
                     )}
                   </div>
                 </div>
-                <div>Team image</div>
-                <img src={imageSrc} />
-
                 <div>
                   <label
                     htmlFor="description"
